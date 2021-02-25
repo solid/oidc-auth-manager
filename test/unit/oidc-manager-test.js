@@ -14,6 +14,8 @@ chai.should()
 
 const OidcManager = require('../../src/oidc-manager')
 
+const sampleProfileSrc = require('../resources/sample-webid-profile')
+
 describe('OidcManager', () => {
   afterEach(() => {
     nock.cleanAll()
@@ -253,6 +255,10 @@ describe('OidcManager', () => {
       }
 
       nock('https://example.com')
+        .get('/profile')
+        .reply(200, sampleProfileSrc)
+
+      nock('https://example.com')
         .options('/profile')
         .reply(204, 'No content', {
           Link: '<https://provider.com>; rel="http://openid.net/specs/connect/1.0/issuer"'
@@ -269,6 +275,10 @@ describe('OidcManager', () => {
         iss: 'https://provider.com',
         sub: 'https://example.com/profile#me'
       }
+
+      nock('https://example.com')
+        .get('/profile')
+        .reply(200, sampleProfileSrc)
 
       nock('https://example.com')
         .options('/profile')

@@ -13,5 +13,7 @@ module.exports = `
     a schema:Person ;
 
     solid:account </> ;  # link to the account uri
-    pim:storage </> .    # root storage
+    pim:storage </> ;    # root storage
+
+    solid:oidcIssuer <https://provider.com> .
 `

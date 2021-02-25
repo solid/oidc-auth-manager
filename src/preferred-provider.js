@@ -62,9 +62,9 @@ function providerExists (uri) {
  *  provider URI was found, reject with an error.
  */
 function discoverProviderFor (webId) {
-  return discoverFromHeaders(webId)
+  return discoverFromProfile(webId)
 
-    .then(providerFromHeaders => providerFromHeaders || discoverFromProfile(webId))
+    .then(providerFromProfile => providerFromProfile || discoverFromHeaders(webId))
 
     .then(providerUri => {
       validateProviderUri(providerUri, webId) // Throw an error if empty or invalid

@@ -12,6 +12,7 @@ const expect = chai.expect
 const serverUri = 'https://example.com'
 
 const sampleProfileSrc = require('../resources/sample-webid-profile')
+const sampleProfileSrcWithOidcIssuer = require('../resources/sample-webid-profile-with-oidc-issuer')
 
 describe('preferred-provider.js', () => {
   afterEach(() => {
@@ -22,6 +23,10 @@ describe('preferred-provider.js', () => {
     const webId = 'https://example.com/#me'
 
     it('should extract and validate the provider uri from link rel header', () => {
+      nock('https://example.com')
+        .get('/')
+        .reply(200, sampleProfileSrc)
+
       nock(serverUri)
         .options('/')
         .reply(204, 'No content', {
@@ -35,6 +40,10 @@ describe('preferred-provider.js', () => {
     })
 
     it('should not drop the path from extracted provider uri', () => {
+      nock('https://example.com')
+        .get('/')
+        .reply(200, sampleProfileSrc)
+
       nock(serverUri)
         .options('/')
         .reply(204, 'No content', {
@@ -49,12 +58,8 @@ describe('preferred-provider.js', () => {
 
     it('should extract and validate the provider uri from the webid profile', () => {
       nock(serverUri)
-        .options('/')
-        .reply(204, 'No content')
-
-      nock(serverUri)
         .get('/')
-        .reply(200, sampleProfileSrc, {
+        .reply(200, sampleProfileSrcWithOidcIssuer, {
           'Content-Type': 'text/turtle'
         })
 
@@ -147,6 +152,10 @@ describe('preferred-provider.js', () => {
     })
 
     it('should discover preferred provider if no oidc capability at webid', () => {
+      nock('https://example.com')
+        .get('/profile')
+        .reply(200, sampleProfileSrc)
+
       nock('https://example.com')
         .head('/.well-known/openid-configuration')
         .reply(404)
